@@ -1,0 +1,51 @@
+Package: rplaza
+Title: R Interface to the PLAZA Database for Plant Comparative Genomics
+Version: 0.99.0
+Date: 2025-06-01
+Authors@R: 
+    c(
+    person(given = "Fabrício",
+           family = "Almeida-Silva",
+           role = c("aut", "cre"),
+           email = "fabricio_almeidasilva@hotmail.com",
+           comment = c(ORCID = "0000-0002-5314-2964")),
+    person(given = "Yves",
+           family = "Van de Peer",
+           role = "aut",
+           email = "yves.vandepeer@psb.vib-ugent.be",
+           comment = c(ORCID = "0000-0003-4327-3730"))
+    )
+Description: rplaza provides an R interface to the PLAZA database
+    for plant comparative genomics data. rplaza allows loading
+    of PLAZA data (e.g., sequences, annotation, functional annotation,
+    homologous gene families) to an R session using core Bioconductor
+    data structures, streamlining interoperability and data analyses.
+License: GPL-3
+URL: https://github.com/almeidasilvaf/rplaza
+BugReports: https://support.bioconductor.org/t/rplaza
+biocViews: 
+    Software,
+    WholeGenome,
+    ComparativeGenomics,
+    FunctionalGenomics
+Encoding: UTF-8
+LazyData: false
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    utils,
+    BiocFileCache,
+    rtracklayer,
+    GenomicRanges,
+    Biostrings
+Depends: 
+    R (>= 4.4.0)
+Suggests: 
+    testthat (>= 3.0.0),
+    knitr,
+    BiocStyle,
+    rmarkdown,
+    covr,
+    sessioninfo
+Config/testthat/edition: 3
+VignetteBuilder: knitr
