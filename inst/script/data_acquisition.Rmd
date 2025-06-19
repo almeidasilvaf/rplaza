@@ -1,0 +1,155 @@
+---
+title: "Data acquisition"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(taxize)
+
+set.seed(123)
+```
+
+# `data/`
+
+We will start by defining some helper functions.
+
+```{r}
+#' Format a `classification` object (from taxize) into a data frame
+format_classification <- function(class_list) {
+    
+    class_df <- Reduce(rbind, lapply(seq_along(class_list), function(x) {
+        
+        cdf <- class_list[[x]]
+        fn <- function(x) { return(ifelse(length(x) == 0, NA, x)) } 
+        
+        df <- data.frame(
+            ncbi_species = fn(cdf$name[cdf$rank == "species"]),
+            family = fn(cdf$name[cdf$rank == "family"]),
+            order = fn(cdf$name[cdf$rank == "order"]),
+            class = fn(cdf$name[cdf$rank == "class"]),
+            superclass = fn(cdf$name[cdf$rank == "superclass"]),
+            subphylum = fn(cdf$name[cdf$rank == "subphylum"]),
+            phylum = fn(cdf$name[cdf$rank == "phylum"])
+        )
+        
+        return(df)
+    }))
+    
+    return(class_df)
+}
+```
+
+## *plaza_metadata*
+
+This data frame contains a list of species in PLAZA instances and associated
+metadata, including taxonomic information.
+
+```{r}
+# Dicots ----
+## PLAZA metadata
+dicots_plaza <- read_tsv(
+    "https://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_05/SpeciesInformation/species_information.csv.gz",
+    show_col_types = FALSE, comment = "# "
+) |>
+    rename(PLAZA_ID = `#species`)
+
+## Taxonomic information
+dicots_tax <- taxize::classification(dicots_plaza$tax_id, db = "ncbi") |>
+    format_classification()
+
+
+# Monocots ----
+## PLAZA metadata
+monocots_plaza <- read_tsv(
+    "https://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_05/SpeciesInformation/species_information.csv.gz",
+    show_col_types = FALSE, comment = "# "
+) |>
+    rename(PLAZA_ID = `#species`)
+
+## Taxonomic information
+monocots_tax <- taxize::classification(monocots_plaza$tax_id, db = "ncbi") |>
+    format_classification()
+
+
+# Pico ----
+## PLAZA metadata
+pico_plaza <- read_delim(
+    "ftp://ftp.psb.ugent.be/pub/plaza/plaza_pico_03/SpeciesInformation/species_information.csv.gz",
+    delim = ";", show_col_types = FALSE, comment = "# "
+) |>
+    rename(PLAZA_ID = 1)
+
+## Taxonomic information
+pico_tax <- taxize::classification(pico_plaza$tax_id, db = "ncbi") |>
+    format_classification()
+
+# Diatoms ----
+## PLAZA metadata
+diatoms_plaza <- read_delim(
+    "ftp://ftp.psb.ugent.be/pub/plaza/plaza_diatoms_01/SpeciesInformation/species_information.csv.gz",
+    delim = ";", show_col_types = FALSE, comment = "# "
+) |>
+    rename(PLAZA_ID = 1)
+
+## Taxonomic information
+diatoms_tax <- taxize::classification(diatoms_plaza$tax_id, db = "ncbi") |>
+    format_classification()
+
+# Create final list of data frames
+plaza_metadata <- list(
+    Dicots = cbind(dicots_plaza, dicots_tax),
+    Monocots = cbind(monocots_plaza, monocots_tax),
+    Diatoms = cbind(diatoms_plaza, diatoms_tax),
+    Pico = cbind(pico_plaza, pico_tax)
+)
+
+plaza_metadata <- lapply(plaza_metadata, function(x) {
+    
+    df <- x |>
+        dplyr::select(
+            PLAZA_ID, common_name, NCBI_name = ncbi_species, 
+            NCBI_taxid = tax_id, family, order, class, source, 
+            data_provider, pubmed_id
+        )
+    
+    return(df)
+})
+
+# Save object
+usethis::use_data(plaza_metadata, compress = "xz")
+```
+
+# `extdata/`
+
+
+# Internal data
+
+## sp2instance
+
+This object contains a data frame of PLAZA species IDs and the PLAZA instance
+where they can be found. If a species is found in multiple PLAZA 
+instances (e.g., *Arabidopsis thaliana*), the following priority scheme
+is used:
+
+Dicots > Monocots > Diatoms > Pico.
+
+The object `sp2instance` contains a data frame with 2 columns:
+- `PLAZA_ID` (character): PLAZA species IDs as in `plaza_metadata`.
+- `instance` (character): PLAZA instance. One of 'Dicots', 'Monocots', 
+'Diatoms', or 'Pico'.
+
+```{r}
+data("plaza_metadata")
+sp2instance <- plaza_metadata |>
+    bind_rows(.id = "instance") |>
+    select(PLAZA_ID, instance) |>
+    distinct(PLAZA_ID, .keep_all = TRUE)
+
+usethis::use_data(sp2instance, compress = "xz", internal = TRUE)
+```
+
