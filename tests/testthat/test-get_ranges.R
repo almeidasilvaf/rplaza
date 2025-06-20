@@ -1,6 +1,5 @@
 
-# Load required data----
-
+# Start tests ----
 test_that("get_annotation() loads ranges as GRanges/GRangesList", {
     
     sp <- c("mco", "cre")
