@@ -16,7 +16,7 @@ get_sequences(
 \item{type}{Character indicating what type of locus to extract.
 One of 'CDS', 'transcript', or 'protein'.}
 
-\item{transcripts}{Character indicating what genes for which ranges will
+\item{transcripts}{Character indicating what genes for which sequences will
 be extracted. One of 'all' (for each gene, all transcripts and
 associated features), or 'longest' (for each gene, only longest transcripts
 and associated features).}

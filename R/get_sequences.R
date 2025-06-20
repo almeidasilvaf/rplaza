@@ -45,7 +45,7 @@ get_genome <- function(species) {
 #' @param species Character vector of PLAZA species IDs.
 #' @param type Character indicating what type of locus to extract.
 #' One of 'CDS', 'transcript', or 'protein'.
-#' @param transcripts Character indicating what genes for which ranges will
+#' @param transcripts Character indicating what genes for which sequences will
 #' be extracted. One of 'all' (for each gene, all transcripts and 
 #' associated features), or 'longest' (for each gene, only longest transcripts
 #' and associated features).
