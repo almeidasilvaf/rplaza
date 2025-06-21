@@ -41,21 +41,16 @@ get_annotation <- function(
     )
     
     # Retrieve data
-    if(length(furl) == 1) {
-        ranges <- rtracklayer::import(
-            bfcrpath(BiocFileCache(), furl)
-        )
-    } else {
-        ranges <- lapply(furl, function(x) {
-            return(
-                rtracklayer::import(
-                    bfcrpath(BiocFileCache(), x)
-                )
+    ranges <- lapply(furl, function(x) {
+        return(
+            rtracklayer::import(
+                bfcrpath(BiocFileCache(), x)
             )
-        })
-        names(ranges) <- species
-        ranges <- GenomicRanges::GRangesList(ranges)
-    }
-
+        )
+    })
+    names(ranges) <- species
+    ranges <- GenomicRanges::GRangesList(ranges)
+    if(length(furl) == 1) { ranges <- ranges[[1]] }
+    
     return(ranges)
 }

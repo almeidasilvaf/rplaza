@@ -21,20 +21,15 @@ get_genome <- function(species) {
     )
     
     # Retrieve data
-    if(length(furl) == 1) {
-        seq <- readDNAStringSet(
-            bfcrpath(BiocFileCache(), furl)
-        )
-    } else {
-        seq <- lapply(furl, function(x) {
-            return(
-                readDNAStringSet(
-                    bfcrpath(BiocFileCache(), x)
-                )
+    seq <- lapply(furl, function(x) {
+        return(
+            readDNAStringSet(
+                bfcrpath(BiocFileCache(), x)
             )
-        })
-        names(seq) <- species
-    }
+        )
+    })
+    names(seq) <- species
+    if(length(furl) == 1) { seq <- seq[[1]] }
     
     return(seq)
 }
@@ -79,20 +74,15 @@ get_sequences <- function(
     
     # Retrieve data
     read_func <- ifelse(type == "protein", readAAStringSet, readDNAStringSet)
-    if(length(furl) == 1) {
-        seq <- read_func(
-            bfcrpath(BiocFileCache(), furl)
-        )
-    } else {
-        seq <- lapply(furl, function(x) {
-            return(
-                read_func(
-                    bfcrpath(BiocFileCache(), x)
-                )
+    seq <- lapply(furl, function(x) {
+        return(
+            read_func(
+                bfcrpath(BiocFileCache(), x)
             )
-        })
-        names(seq) <- species
-    }
+        )
+    })
+    names(seq) <- species
+    if(length(furl) == 1) { seq <- seq[[1]] }
     
     return(seq)
 }

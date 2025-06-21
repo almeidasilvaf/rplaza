@@ -69,22 +69,16 @@ get_descriptions <- function(species) {
     
     # Retrieve data
     delims <- get_delim(species)
-    if(length(furl) == 1) {
-        des_df <- read.delim(
-            bfcrpath(BiocFileCache(), furl), sep = delims, 
-            comment.char = "#", col.names = c("gene", "type", "description")
-        )[, c("gene", "description")]
-    } else {
-        des_df <- lapply(seq_along(furl), function(x) {
-            return(
-                read.delim(
-                    bfcrpath(BiocFileCache(), furl[[x]]), sep = delims[x], 
-                    comment.char = "#", col.names = c("gene", "type", "description")
-                )[, c("gene", "description")]
-            )
-        })
-        names(des_df) <- species
-    }
+    des_df <- lapply(seq_along(furl), function(x) {
+        return(
+            read.delim(
+                bfcrpath(BiocFileCache(), furl[[x]]), sep = delims[x], 
+                comment.char = "#", col.names = c("gene", "type", "description")
+            )[, c("gene", "description")]
+        )
+    })
+    names(des_df) <- species
+    if(length(furl) == 1) { des_df <- des_df[[1]] }
     
     return(des_df)
 }
@@ -111,24 +105,17 @@ get_id_conversions <- function(species) {
     
     # Retrieve data
     delims <- get_delim(species)
-    if(length(furl) == 1) {
-        id_df <- read.delim(
-            bfcrpath(BiocFileCache(), furl), sep = delims, 
-            comment.char = "#", 
-            col.names = c("original_id", "alt_id_type", "alt_id")
-        )
-    } else {
-        id_df <- lapply(seq_along(furl), function(x) {
-            return(
-                read.delim(
-                    bfcrpath(BiocFileCache(), furl[[x]]), sep = delims[x], 
-                    comment.char = "#", 
-                    col.names = c("original_id", "alt_id_type", "alt_id")
-                )
+    id_df <- lapply(seq_along(furl), function(x) {
+        return(
+            read.delim(
+                bfcrpath(BiocFileCache(), furl[[x]]), sep = delims[x], 
+                comment.char = "#", 
+                col.names = c("original_id", "alt_id_type", "alt_id")
             )
-        })
-        names(id_df) <- species
-    }
+        )
+    })
+    names(id_df) <- species
+    if(length(furl) == 1) { id_df <- id_df[[1]] }
     
     return(id_df)
 }

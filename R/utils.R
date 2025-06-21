@@ -1,4 +1,32 @@
 
+#' Get base URL for a PLAZA instance
+#'
+#' @param instance Character scalar with name of PLAZA instance for which
+#' base URL will be extracted. One of 'Dicots', 'Monocots', 'Diatoms',
+#' or 'Pico'.
+#'
+#' @return A character scalar with the base URL of the specified PLAZA
+#' instance.
+#' @noRd
+instance2url <- function(instance) {
+    
+    if(instance == "Dicots") {
+        u <- "https://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_05"
+    } else if(instance == "Monocots") {
+        u <- "https://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_05"
+    } else if(instance == "Diatoms") {
+        u <- "ftp://ftp.psb.ugent.be/pub/plaza/plaza_diatoms_01"
+    } else if(instance == "Pico") {
+        u <- "ftp://ftp.psb.ugent.be/pub/plaza/plaza_pico_03"
+    } else {
+        stop("Invalid PLAZA instance. Use one of 'Dicots', 'Monocots', 'Diatoms', or 'Pico'.")
+    }
+    
+    return(u)
+}
+
+
+
 #' Construct base PLAZA URLs based on species IDs
 #'
 #' @param species Character with PLAZA species IDs.
@@ -12,17 +40,7 @@ base_url <- function(species) {
     inst_df <- sp2instance[sp2instance$PLAZA_ID %in% species, ]
     inst_df <- inst_df[match(species, inst_df$PLAZA_ID), ]
     
-    urls <- vapply(inst_df$instance, function(x) {
-        if(x == "Dicots") {
-            u <- "https://ftp.psb.ugent.be/pub/plaza/plaza_public_dicots_05"
-        } else if(x == "Monocots") {
-            u <- "https://ftp.psb.ugent.be/pub/plaza/plaza_public_monocots_05"
-        } else if(x == "Diatoms") {
-            u <- "ftp://ftp.psb.ugent.be/pub/plaza/plaza_diatoms_01"
-        } else {
-            u <- "ftp://ftp.psb.ugent.be/pub/plaza/plaza_pico_03"
-        }
-    }, character(1))
+    urls <- vapply(inst_df$instance, instance2url, character(1))
     names(urls) <- species
     
     return(urls)
