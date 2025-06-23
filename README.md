@@ -12,17 +12,28 @@ issues](https://img.shields.io/github/issues/almeidasilvaf/rplaza)](https://gith
 coverage](https://codecov.io/gh/almeidasilvaf/rplaza/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/rplaza?branch=devel)
 <!-- badges: end -->
 
-The goal of `rplaza` is to provide users with an R interface to the
-PLAZA database of plant comparative genomics. `rplaza` can be used to
+The goal of **rplaza** is to provide users with an R interface to the
+PLAZA database of plant comparative genomics. **rplaza** can be used to
 retrieve PLAZA data (e.g., genome and locus sequences, genome
 annotation, functional annotation, homology, etc) directly from an R
-session using standard R/Bioconductor data classes, as summarized below:
+session using standard R/Bioconductor data classes.
 
-| Data                   | File format | R/BioC class                   |
-|:-----------------------|:------------|:-------------------------------|
-| Sequences              | FASTA       | *AAStringSet* / *DNAStringSet* |
-| Ranges                 | GFF3        | *GRanges*                      |
-| Functions and homology | TSV         | *data.frame*                   |
+## Overview
+
+**rplaza** functions and the data they retrieve are summarized below:
+
+| fnc | desc | bioc_class |
+|:---|:---|:---|
+| *get_genome()* | Genome sequences | *DNAStringSet* |
+| *get_sequences()* | Locus sequences (proteins, transcripts, CDS) | *DNAStringSet* / *AAStringSet* |
+| *get_annotation()* | Genomic coordinates of genes | *GRanges* |
+| *get_functional_annotation()* | Functional annotation (GO, InterPro, MapMan) | *data.frame* |
+| *get_tx2gene()* | Transcript-to-gene ID mapping | *data.frame* |
+| *get_id_conversions()* | Correspondence between alternative gene IDs | *data.frame* |
+| *get_descriptions()* | Short gene descriptions | *data.frame* |
+| *get_family_assignments()* | Gene family assignments | *data.frame* |
+| *get_family_functions()* | Overrepresented functions for gene families | *data.frame* |
+| *get_block_duplicates()* | Block (segmental or whole-genome) duplicates | *data.frame* |
 
 ## Installation instructions
 

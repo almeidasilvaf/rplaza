@@ -21,22 +21,52 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/almeidasilvaf/rplaza/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/rplaza?branch=devel)
 <!-- badges: end -->
 
-The goal of `rplaza` is to provide users with an R interface to the PLAZA
-database of plant comparative genomics. `rplaza` can be used to retrieve PLAZA 
+The goal of __rplaza__ is to provide users with an R interface to the PLAZA
+database of plant comparative genomics. __rplaza__ can be used to retrieve PLAZA 
 data (e.g., genome and locus sequences, genome annotation, functional 
 annotation, homology, etc) directly from an R session using 
-standard R/Bioconductor data classes, as summarized below:
+standard R/Bioconductor data classes.
 
-```{r echo = FALSE}
-summary_df <- data.frame(
-    Data = c("Sequences", "Ranges", "Functions and homology"),
-    Format = c("FASTA", "GFF3", "TSV"),
-    `R class` = c("*AAStringSet* / *DNAStringSet*", "*GRanges*", "*data.frame*")
+## Overview
+
+__rplaza__ functions and the data they retrieve are summarized below:
+
+```{r echo=FALSE}
+overview <- data.frame(
+    fnc = c(
+        "*get_genome()*", 
+        "*get_sequences()*", 
+        "*get_annotation()*",
+        "*get_functional_annotation()*",
+        "*get_tx2gene()*",
+        "*get_id_conversions()*",
+        "*get_descriptions()*",
+        "*get_family_assignments()*",
+        "*get_family_functions()*",
+        "*get_block_duplicates()*"
+    ),
+    desc = c(
+        "Genome sequences", 
+        "Locus sequences (proteins, transcripts, CDS)",
+        "Genomic coordinates of genes",
+        "Functional annotation (GO, InterPro, MapMan)",
+        "Transcript-to-gene ID mapping",
+        "Correspondence between alternative gene IDs",
+        "Short gene descriptions",
+        "Gene family assignments",
+        "Overrepresented functions for gene families",
+        "Block (segmental or whole-genome) duplicates"
+    ),
+    bioc_class = c(
+        "*DNAStringSet*", 
+        "*DNAStringSet* / *AAStringSet*",
+        "*GRanges*",
+        rep("*data.frame*", 7)
+    )
 )
 
-knitr::kable(summary_df, col.names = c("Data", "File format", "R/BioC class"))
+knitr::kable(overview)
 ```
-
 
 ## Installation instructions
 
