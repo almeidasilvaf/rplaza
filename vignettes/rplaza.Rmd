@@ -1,0 +1,402 @@
+---
+title: "Accessing data from the PLAZA database"
+author: 
+  - name: Fabricio Almeida-Silva
+    affiliation: VIB-UGent Center for Plant Systems Biology, Ghent, Belgium
+  - name: Yves Van de Peer
+    affiliation: VIB-UGent Center for Plant Systems Biology, Ghent, Belgium
+output: 
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+    number_sections: yes
+bibliography: vignette_bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{Accessing data from the PLAZA database}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    crop = NULL
+)
+```
+
+# Introduction
+
+PLAZA [@van2022plaza] is a database for plant comparative and functional 
+genomics, centralizing data produced by different genome sequencing 
+initiatives. Like Ensembl [@dyer2025ensembl], PLAZA organizes data in instances
+based on clades of the (green) tree of life (PLAZA Dicots, PLAZA Monocots, 
+PLAZA Diatoms, and pico-PLAZA). Besides its rich web server where users 
+can interactively search and explore plant genomic data, PLAZA offers 
+bulk download of data, including whole-genome and locus sequences, 
+gene annotations, functional annotations, homology, etc. 
+`r BiocStyle::Githubpkg("rplaza")` provides an R interface to the PLAZA 
+database, allowing the direct import of PLAZA data to the R session using
+standard R/Bioconductor classes, allowing seamless interoperability and 
+integration with Bioconductor packages.
+
+Data types provided by PLAZA and how they are stored for interoperability 
+with R/Bioconductor packages are summarized below:
+
+```{r echo = FALSE}
+summary_df <- data.frame(
+    Data = c("Sequences", "Ranges", "Functions and homology"),
+    Format = c("FASTA", "GFF3", "TSV"),
+    `R class` = c("*AAStringSet*/*DNAStringSet*", "*GRanges*", "*data.frame*")
+)
+
+knitr::kable(summary_df, col.names = c("Data", "File format", "R class"))
+```
+
+# Installation
+
+`r BiocStyle::Githubpkg("rplaza")` can be installed from Bioconductor
+with the following code:
+
+```{r installation, eval=FALSE}
+if(!requireNamespace('BiocManager', quietly = TRUE))
+  install.packages('BiocManager')
+
+BiocManager::install("rplaza")
+```
+
+```{r load_package, message=FALSE}
+# Load package after installation
+library(rplaza)
+
+set.seed(123) # for reproducibility
+```
+
+# PLAZA instances and species (or *fantastic plants and where to find them*)
+
+The PLAZA database is divided in four instances that are specialized in 
+different clades:
+
+1. **PLAZA Dicots:** focus on eudicot plants (*N* = 98 species);
+2. **PLAZA Monocots:** focus on monocot plants (*N* = 52 species);
+3. **pico-PLAZA:** focus on eukaryotic micro-organisms (*N* = 39 species);
+4. **PLAZA Diatoms:** focus on diatoms (*N* = 26 species).
+
+To access data on which species can be found in species, as well as associated
+metadata (taxonomic information, data sources, etc), you can inspect the 
+object `plaza_metadata`, which comes with `r BiocStyle::Githubpkg("rplaza")`.
+This object is a list of data frames, one for each PLAZA instance.
+
+```{r}
+# Load PLAZA metadata
+data("plaza_metadata")
+
+names(plaza_metadata)
+```
+
+As you can see, the list has four data frames.
+If you want to have a look at the species in PLAZA Dicots, for instance, you
+need to extract the corresponding data frame from the list.
+
+```{r}
+# Look at metadata for 
+head(plaza_metadata$Dicots)
+```
+
+Note that PLAZA gives unique IDs to each species, and these are available
+in column `PLAZA_ID` of each data frame. These PLAZA species IDs are essential
+to work with `r BiocStyle::Githubpkg("rplaza")`, as most functions in this 
+package require specifying species using PLAZA IDs.
+
+It is also important to keep in mind that some species are present in multiple
+PLAZA instances (e.g., *Arabidopsis thaliana*), so if you're combining these
+data frames in a single data frame, you need to remove duplicate rows. 
+For example:
+
+```{r}
+# Combine all data frames together and remove redundancy
+plaza_all <- dplyr::bind_rows(plaza_metadata, .id = "instance") |>
+    dplyr::distinct(PLAZA_ID, .keep_all = TRUE)
+
+head(plaza_all)
+nrow(plaza_all)
+```
+
+After combining all data frames together and removing duplicates, we can see
+that there are `r nrow(plaza_all)` unique species across all PLAZA instances.
+
+# A note on software design
+
+`r BiocStyle::Githubpkg("rplaza")` uses `r BiocStyle::Biocpkg("BiocFileCache")`
+to create a **temporary local cache** of remote resources per R session.
+This way, if you try to retrieve the same data multiple times in a single
+R session, you will only download data once. Caching is especially important
+in two common scenarios:
+
+1. You downloaded data for species A and B, but later decide to include species
+C and D as well. If you re-run the code to obtain data for species A, B, C, 
+and D, you will only download data for species C and D, as data for species A
+and B are stored in a local cache.
+
+2. You tried to download data for several species, but after some time your
+download failed for some reason (internet issues, timeout, etc). If you re-run
+the code to download data, your download will start from where it failed, so
+it will finish much faster.
+
+# Obtaining sequence data
+
+PLAZA provides sequences for whole genomes and whole-genome loci (all proteins,
+all transcripts, and all CDS in a genome). These are available as FASTA
+files, which `r BiocStyle::Githubpkg("rplaza")` reads as `DNAStringSet` objects
+(or `AAStringSet` objects for proteins).
+
+## Genomes
+
+To extract whole-genome sequences for a particular species, you will use 
+the function `get_genome()`. For a single species, `get_genome()` takes a 
+species ID and returns a `DNAStringSet` object.
+To demonstrate it, let's obtain the whole genome of *Arabidopsis thaliana*.
+
+```{r}
+# Retrieve genome of Arabidopsis thaliana
+ath_genome <- get_genome("ath")
+
+ath_genome
+```
+
+For multiple species, `get_genome()` takes a vector of species IDs 
+and returns a list of `DNAStringSet` objects.
+
+```{r}
+# Retrieve genome of A. thaliana and A. lyrata
+arabidopsis_genomes <- get_genome(c("ath", "aly"))
+
+arabidopsis_genomes
+```
+
+To learn more about how to work with `DNAStringSet` objects,
+read the vignette of the `r BiocStyle::Biocpkg("Biostrings")` package.
+
+## Loci
+
+To retrieve sequences for all proteins, transcripts, or CDS in the genome 
+of a particular species, you will use the function `get_sequences()`. 
+Besides specifying one
+or multiple species IDs, `get_sequences()` also requires the locus `type` 
+(one of 'CDS', 'transcript', or 'protein'), and what `transcripts` to extract
+(one of 'all' or 'longest'). 
+
+For example, researchers in evolutionary genomics often want to obtain 
+protein sequences of the longest transcripts of each gene, so that they compare
+genomes. These are usually called 'proteomes' by software tools such as
+OrthoFinder [@emms2019orthofinder] and syntenet [@almeida2023syntenet]. 
+To do that, you'd run:
+
+```{r}
+# Retrieve protein sequences of the longest transcripts (one per gene)
+proteome <- get_sequences("ath", type = "protein", transcripts = "longest")
+
+proteome
+```
+
+Alternatively, one might be interested in all transcripts produced by a 
+particular genome. In transcriptomics, this is often called a 'reference
+transcriptome', and it is required by software tools that quantify
+transcript abundances, such as salmon [@patro2017salmon]. 
+To do that, you would run:
+
+```{r}
+# Obtain all transcripts produced by a genome (aka 'reference transcriptome')
+ref_tx <- get_sequences("ath", type = "transcript", transcripts = "all")
+
+ref_tx
+```
+
+Note that the number of sequences in `ref_tx` in much larger than the number
+of sequences in `proteome`, since the former contains sequences for all
+transcripts (including multiple isoforms per gene).
+
+To learn more about how to work with `AAStringSet` and `DNAStringSet` objects,
+read the vignette of the `r BiocStyle::Biocpkg("Biostrings")` package.
+
+# Obtaining gene annotations (a.k.a. 'ranges')
+
+The obtain the genomic locations (ranges, with start and end coordinates) 
+of all genes in the genome of a particular species, you will use the
+function `get_annotation()`. This function returns a `GRanges` object
+(or `GRangesList` for multiple species) with genomic coordinates
+and associated metadata.
+As input, you need to specify the PLAZA species
+ID of your species of interest (one or multiple), what `transcripts` you
+want to extract ('all' or 'longest', exactly as in `get_sequences()`),
+and what `features` to extract per transcript ('all' - including exons, CDS,
+UTRs, etc. - or 'exons').
+
+For example, if you want to extract ranges for the complete genome annotation
+(i.e., all transcripts, all features), you'd run:
+
+```{r}
+# Extract ranges for all features (exons, CDS, UTRs, etc) of all transcripts
+annotation_all <- get_annotation("ath", transcripts = "all", features = "all")
+
+annotation_all
+```
+
+To learn more about how to work with `GRanges` objects,
+read the vignette of the `r BiocStyle::Biocpkg("GenomicRanges")` package.
+
+# Obtaining functional annotations
+
+PLAZA offers functional annotation for all genes in all species using
+[GO terms](http://www.geneontology.org/), 
+[MapMan](https://mapman.gabipd.org/) pathways, 
+and [InterPro](https://www.ebi.ac.uk/interpro/) domains.
+To retrieve functional annotation for all genes of a particular species, 
+you will use the function `get_functional_annotation()`. As input,
+this function takes one or multiple PLAZA species IDS and the `ontology`
+to use (one of 'GO', 'MapMan', or 'InterPro'), and it returns a data frame
+(or list of data frames, in case of multiple species) with terms associated
+with each gene.
+
+For example, to obtain InterPro annotated to each gene 
+of *Arabidopsis thaliana*, you'd use:
+
+```{r}
+# Get InterPro domains
+ath_interpro <- get_functional_annotation("ath", ontology = "InterPro")
+
+head(ath_interpro)
+```
+
+As another example, to obtain GO annotation for the Chlorophyta algae 
+*Chlamydomonas reinhardtii* and *Micromonas commoda*, you'd use:
+
+```{r}
+# Obtain functional annotation for Chlorophyta algae
+algae_go <- get_functional_annotation(c("cre", "mco"), ontology = "GO")
+
+names(algae_go)
+head(algae_go$cre)
+```
+
+Lastly, to obtain MapMan annotations for all *A. thaliana* genes, you'd use:
+
+```{r}
+# Retrieve MapMan annotations for all *A. thaliana* genes
+ath_mapman <- get_functional_annotation("ath", ontology = "MapMan")
+
+head(ath_mapman)
+```
+
+# Obtaining gene IDs and descriptions
+
+Researchers often have transcript IDs for a particular genome and want
+to obtain their corresponding gene IDs. PLAZA provides correspondence tables of
+transcript-to-gene ID mappings for all species, which can be very helpful
+in this context. These can be retrieve with `get_tx2gene`, which takes
+as input PLAZA species IDs and what `transcripts` to retrieve (one of 'all'
+or 'longest').
+
+For example, to obtain transcript-to-gene ID mappings 
+for *Arabidopsis thaliana*, you'd run:
+
+```{r}
+# Get tx2gene mappings for *A. thaliana*
+ath_tx2gene <- get_tx2gene("ath", transcripts = "all")
+
+head(ath_tx2gene)
+```
+
+A similar problem occurs when researchers have gene symbols (e.g., *FLC* and
+*MAF2* in *A. thaliana*) and want to extract their gene IDs. To help in this
+case, PLAZA offers ID conversion tables, which can be accessed with the
+function `get_id_conversions()`, as demonstrated below:
+
+```{r}
+# Get ID conversion table for *A. thaliana*
+ath_ids <- get_id_conversions("ath")
+
+head(ath_ids)
+```
+
+Lastly, researchers are often interested in short (usually one sentence) 
+descriptions for genes to help them interpret their results. 
+These can be obtained from PLAZA with the function `get_descriptions()`, which
+takes one or multiple PLAZA species IDs as input.
+
+For example, to obtain gene descriptions for all *A. thaliana* genes, you'd
+run:
+
+```{r}
+# Get gene descriptions for *A. thaliana*
+ath_descriptions <- get_descriptions("ath")
+
+head(ath_descriptions)
+```
+
+# Obtaining homology data
+
+For each PLAZA instance, all (coding) genes in all species are grouped in
+homologous and orthologous gene families. These gene families, sometimes 
+referred to as 'orthogroups' or 'hierarchical orthologous groups (HOGs)',
+are the basis for comparative analyses in evolutionary genomics. 
+To obtain gene family assignments for all genes in a PLAZA instance, you will
+use the function `get_family_assignments()`. As input, you need to pass
+the PLAZA `instance` (one of 'Dicots', 'Monocots', 'Diatoms', or 'Pico'), and
+the gene family `type` (one of 'homo' for homologous, or 'ortho' for 
+orthologous).
+
+For example, to retrieve all genes and their homologous family assignments
+in PLAZA Dicots, you'd run:
+
+```{r}
+# Get family assignments from PLAZA Dicots
+dicots_fams <- get_family_assignments(instance = "Dicots", type = "homo")
+
+head(dicots_fams)
+```
+
+Once you have some homologous or orthologous gene families of 
+interest (e.g., because they expanded in a particular clade), you would
+probably want to know the functions of the genes in these families.
+Luckily for you, PLAZA stores data on overrepresented functions in its gene
+families. These can be accessed with the function `get_family_functions()`, but
+they are only available for PLAZA Dicots and PLAZA Monocots.
+
+To retrieve overrepresented functions in all homologous gene families in PLAZA
+Dicots, you'd run:
+
+```{r}
+# Get overrepresented functions in PLAZA Dicots families
+dicots_fams_func <- get_family_functions(instance = "Dicots", type = "homo")
+
+head(dicots_fams_func)
+```
+
+Lastly, PLAZA also stores data on block duplicates (anchor pairs in syntenic 
+regions, derived from segmental or whole-genome duplications) for all its 
+genomes. These data can be retrieved with 
+the function `get_block_duplicates()`, which takes one or multiple PLAZA
+species IDs as input.
+
+For example, to retrieve all *A. thaliana* block duplicates, you'd run:
+
+```{r}
+# Get block duplicates for *A. thaliana*
+ath_blocks <- get_block_duplicates("ath")
+
+head(ath_blocks)
+```
+
+Note that the `Ks` column is empty, meaning that synonymous substitution rates
+($K_s$) were not calculated for this genome.
+
+# Session information {.unnumbered}
+
+This document was created under the following conditions:
+
+```{r, echo = FALSE}
+sessioninfo::session_info()
+```
+
+# References {.unnumbered}
