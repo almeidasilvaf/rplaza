@@ -67,9 +67,12 @@ print(citation('rplaza'), bibtex = TRUE)
 #>   }
 ```
 
-Please note that the `rplaza` was only made possible thanks to many
-other R and bioinformatics software authors, which are cited either in
-the vignettes and/or the paper(s) describing this package.
+If you use **rplaza**, please also cite:
+
+> Van Bel, M., Silvestri, F., Weitz, E. M., Kreft, L., Botzki, A.,
+> Coppens, F., & Vandepoele, K. (2022). PLAZA 5.0: extending the scope
+> and power of comparative and functional genomics in plants. Nucleic
+> Acids Research, 50(D1), D1468-D1474.
 
 ## Code of Conduct
 
