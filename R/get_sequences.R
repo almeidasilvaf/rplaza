@@ -64,7 +64,7 @@ get_sequences <- function(
     burl <- base_url(species)
     seqtype <- ifelse(
         type == "CDS", "cds", 
-        ifelse(type == "transcript", "transcript", "proteome")
+        ifelse(type == "transcript", "transcripts", "proteome")
     )
     tx <- ifelse(transcripts == "all", ".all_transcripts", ".selected_transcript")
     
