@@ -10,6 +10,7 @@ set.seed(123)
 
 # `data/`
 
+Here we will describe the code used to create package data in `data/`.
 We will start by defining some helper functions.
 
 ``` r
@@ -117,8 +118,6 @@ plaza_metadata <- lapply(plaza_metadata, function(x) {
 # Save object
 usethis::use_data(plaza_metadata, compress = "xz")
 ```
-
-# `extdata/`
 
 # Internal data
 
