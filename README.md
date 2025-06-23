@@ -22,7 +22,7 @@ session using standard R/Bioconductor data classes.
 
 **rplaza** functions and the data they retrieve are summarized below:
 
-| fnc | desc | bioc_class |
+| Function | Data retrieved | R/BioC class |
 |:---|:---|:---|
 | *get_genome()* | Genome sequences | *DNAStringSet* |
 | *get_sequences()* | Locus sequences (proteins, transcripts, CDS) | *DNAStringSet* / *AAStringSet* |

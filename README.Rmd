@@ -65,7 +65,7 @@ overview <- data.frame(
     )
 )
 
-knitr::kable(overview)
+knitr::kable(overview, col.names = c("Function", "Data retrieved", "R/BioC class"))
 ```
 
 ## Installation instructions
