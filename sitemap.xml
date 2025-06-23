@@ -1,0 +1,22 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>/SUPPORT.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/rplaza.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/get_annotation.html</loc></url>
+<url><loc>/reference/get_block_duplicates.html</loc></url>
+<url><loc>/reference/get_descriptions.html</loc></url>
+<url><loc>/reference/get_family_assignments.html</loc></url>
+<url><loc>/reference/get_family_functions.html</loc></url>
+<url><loc>/reference/get_functional_annotation.html</loc></url>
+<url><loc>/reference/get_genome.html</loc></url>
+<url><loc>/reference/get_id_conversions.html</loc></url>
+<url><loc>/reference/get_sequences.html</loc></url>
+<url><loc>/reference/get_tx2gene.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/plaza_metadata.html</loc></url>
+</urlset>
+
