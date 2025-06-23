@@ -8,6 +8,7 @@
 #'
 #' @return A data frame with functional annotation terms for all genes.
 #'
+#' @importFrom utils read.delim
 #' @rdname get_functional_annotation
 #' @export
 #' @examples
