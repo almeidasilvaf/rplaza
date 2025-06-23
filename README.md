@@ -11,8 +11,15 @@ issues](https://img.shields.io/github/issues/almeidasilvaf/rplaza)](https://gith
 
 The goal of `rplaza` is to provide users with an R interface to the
 PLAZA database of plant comparative genomics. `rplaza` can be used to
-retrieve data from PLAZA (e.g., sequences, genome annotation, functional
-annotation, etc) as R objects using standard Bioconductor data classes.
+retrieve PLAZA data (e.g., genome and locus sequences, genome
+annotation, functional annotation, homology, etc) directly from an R
+session using standard R/Bioconductor data classes, as summarized below:
+
+| Data                   | File format | R/BioC class                   |
+|:-----------------------|:------------|:-------------------------------|
+| Sequences              | FASTA       | *AAStringSet* / *DNAStringSet* |
+| Ranges                 | GFF3        | *GRanges*                      |
+| Functions and homology | TSV         | *data.frame*                   |
 
 ## Installation instructions
 
@@ -43,6 +50,21 @@ Please run this yourself to check for any updates on how to cite
 
 ``` r
 print(citation('rplaza'), bibtex = TRUE)
+#> To cite package 'rplaza' in publications use:
+#> 
+#>   Almeida-Silva F, Van de Peer Y (2025). _rplaza: R Interface to the
+#>   PLAZA Database for Plant Comparative Genomics_. R package version
+#>   0.99.0, <https://github.com/almeidasilvaf/rplaza>.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Manual{,
+#>     title = {rplaza: R Interface to the PLAZA Database for Plant Comparative Genomics},
+#>     author = {Fabrício Almeida-Silva and Yves {Van de Peer}},
+#>     year = {2025},
+#>     note = {R package version 0.99.0},
+#>     url = {https://github.com/almeidasilvaf/rplaza},
+#>   }
 ```
 
 Please note that the `rplaza` was only made possible thanks to many
