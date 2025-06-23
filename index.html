@@ -56,38 +56,78 @@
 </div>
 <!-- badges: start -->
 
-<p>The goal of <code>rplaza</code> is to provide users with an R interface to the PLAZA database of plant comparative genomics. <code>rplaza</code> can be used to retrieve PLAZA data (e.g., genome and locus sequences, genome annotation, functional annotation, homology, etc) directly from an R session using standard R/Bioconductor data classes, as summarized below:</p>
+<p>The goal of <strong>rplaza</strong> is to provide users with an R interface to the PLAZA database of plant comparative genomics. <strong>rplaza</strong> can be used to retrieve PLAZA data (e.g., genome and locus sequences, genome annotation, functional annotation, homology, etc) directly from an R session using standard R/Bioconductor data classes.</p>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p><strong>rplaza</strong> functions and the data they retrieve are summarized below:</p>
 <table class="table">
 <colgroup>
-<col width="34%">
-<col width="18%">
-<col width="46%">
+<col width="33%">
+<col width="33%">
+<col width="33%">
 </colgroup>
 <thead><tr>
-<th align="left">Data</th>
-<th align="left">File format</th>
-<th align="left">R/BioC class</th>
+<th align="left">fnc</th>
+<th align="left">desc</th>
+<th align="left">bioc_class</th>
 </tr></thead>
 <tbody>
 <tr>
-<td align="left">Sequences</td>
-<td align="left">FASTA</td>
+<td align="left"><em>get_genome()</em></td>
+<td align="left">Genome sequences</td>
+<td align="left"><em>DNAStringSet</em></td>
+</tr>
+<tr>
+<td align="left"><em>get_sequences()</em></td>
+<td align="left">Locus sequences (proteins, transcripts, CDS)</td>
 <td align="left">
-<em>AAStringSet</em> / <em>DNAStringSet</em>
+<em>DNAStringSet</em> / <em>AAStringSet</em>
 </td>
 </tr>
 <tr>
-<td align="left">Ranges</td>
-<td align="left">GFF3</td>
+<td align="left"><em>get_annotation()</em></td>
+<td align="left">Genomic coordinates of genes</td>
 <td align="left"><em>GRanges</em></td>
 </tr>
 <tr>
-<td align="left">Functions and homology</td>
-<td align="left">TSV</td>
+<td align="left"><em>get_functional_annotation()</em></td>
+<td align="left">Functional annotation (GO, InterPro, MapMan)</td>
+<td align="left"><em>data.frame</em></td>
+</tr>
+<tr>
+<td align="left"><em>get_tx2gene()</em></td>
+<td align="left">Transcript-to-gene ID mapping</td>
+<td align="left"><em>data.frame</em></td>
+</tr>
+<tr>
+<td align="left"><em>get_id_conversions()</em></td>
+<td align="left">Correspondence between alternative gene IDs</td>
+<td align="left"><em>data.frame</em></td>
+</tr>
+<tr>
+<td align="left"><em>get_descriptions()</em></td>
+<td align="left">Short gene descriptions</td>
+<td align="left"><em>data.frame</em></td>
+</tr>
+<tr>
+<td align="left"><em>get_family_assignments()</em></td>
+<td align="left">Gene family assignments</td>
+<td align="left"><em>data.frame</em></td>
+</tr>
+<tr>
+<td align="left"><em>get_family_functions()</em></td>
+<td align="left">Overrepresented functions for gene families</td>
+<td align="left"><em>data.frame</em></td>
+</tr>
+<tr>
+<td align="left"><em>get_block_duplicates()</em></td>
+<td align="left">Block (segmental or whole-genome) duplicates</td>
 <td align="left"><em>data.frame</em></td>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="section level2">
 <h2 id="installation-instructions">Installation instructions<a class="anchor" aria-label="anchor" href="#installation-instructions"></a>
 </h2>
