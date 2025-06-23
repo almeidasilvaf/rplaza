@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![GitHub issues](https://img.shields.io/github/issues/almeidasilvaf/rplaza)](https://github.com/almeidasilvaf/rplaza/issues)
+[![check-bioc](https://github.com/almeidasilvaf/rplaza/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/almeidasilvaf/rplaza/actions/workflows/check-bioc.yml)
+[![Codecov test coverage](https://codecov.io/gh/almeidasilvaf/rplaza/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/rplaza?branch=devel)
 <!-- badges: end -->
 
 The goal of `rplaza` is to provide users with an R interface to the PLAZA
