@@ -16,6 +16,8 @@
 #' tx2gene <- get_tx2gene(species, "all")
 get_tx2gene <- function(species, transcripts = c("all", "longest")) {
     
+    vt <- validate_input(transcripts, c("all", "longest"))
+    
     # Construct URL
     burl <- base_url(species)
     tx <- ifelse(transcripts == "all", ".all_transcripts", ".selected_transcript")
@@ -26,23 +28,17 @@ get_tx2gene <- function(species, transcripts = c("all", "longest")) {
     
     # Retrieve data
     delims <- get_delim(species)
-    if(length(furl) == 1) {
-        tx2gene <- read.delim(
-            bfcrpath(BiocFileCache(), furl), sep = delims, comment.char = "#",
-            col.names = c("transcript_id", "gene_id")
-        )
-    } else {
-        tx2gene <- lapply(seq_along(furl), function(x) {
-            return(
-                read.delim(
-                    bfcrpath(BiocFileCache(), furl[[x]]), sep = delims[x], 
-                    comment.char = "#",
-                    col.names = c("transcript_id", "gene_id")
-                )
+    tx2gene <- lapply(seq_along(furl), function(x) {
+        return(
+            read.delim(
+                bfcrpath(BiocFileCache(), furl[[x]]), sep = delims[x], 
+                comment.char = "#",
+                col.names = c("transcript_id", "gene_id")
             )
-        })
-        names(tx2gene) <- species
-    }
+        )
+    })
+    names(tx2gene) <- species
+    if(length(furl) == 1) { tx2gene <- tx2gene[[1]] }
     
     return(tx2gene)
 }

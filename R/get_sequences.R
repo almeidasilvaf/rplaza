@@ -16,17 +16,11 @@ get_genome <- function(species) {
     
     # Construct URL
     burl <- base_url(species)
-    furl <- file.path(
-        burl, "Genomes", paste0(species, ".fasta.gz")
-    )
+    furl <- file.path(burl, "Genomes", paste0(species, ".fasta.gz"))
     
     # Retrieve data
     seq <- lapply(furl, function(x) {
-        return(
-            readDNAStringSet(
-                bfcrpath(BiocFileCache(), x)
-            )
-        )
+        return(readDNAStringSet(bfcrpath(BiocFileCache(), x)))
     })
     names(seq) <- species
     if(length(furl) == 1) { seq <- seq[[1]] }
@@ -60,6 +54,9 @@ get_sequences <- function(
         transcripts = c("all", "longest")
 ) {
     
+    vtype <- validate_input(type, c("CDS", "transcript", "protein"))
+    vtx <- validate_input(transcripts, c("all", "longest"))
+    
     # Construct URL
     burl <- base_url(species)
     seqtype <- ifelse(
@@ -75,11 +72,7 @@ get_sequences <- function(
     # Retrieve data
     read_func <- ifelse(type == "protein", readAAStringSet, readDNAStringSet)
     seq <- lapply(furl, function(x) {
-        return(
-            read_func(
-                bfcrpath(BiocFileCache(), x)
-            )
-        )
+        return(read_func(bfcrpath(BiocFileCache(), x)))
     })
     names(seq) <- species
     if(length(furl) == 1) { seq <- seq[[1]] }

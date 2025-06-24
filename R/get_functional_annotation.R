@@ -32,11 +32,13 @@ get_functional_annotation <- function(
             "gene_id", "species", "motif_id", "description", 
             "start", "stop", "score", "comment"
         )
-    } else {
+    } else if(ontology == "GO") {
         cnames <- c(
             "gene_id", "species", "go", "evidence", "go_source",
             "provider", "comment", "description", "propagated_from_child"
         )
+    } else {
+        stop("Invalid input to parameter 'ontology'.")
     }
     
     # Retrieve data

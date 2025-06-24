@@ -38,6 +38,9 @@ instance2url <- function(instance) {
 base_url <- function(species) {
     
     inst_df <- sp2instance[sp2instance$PLAZA_ID %in% species, ]
+    if(nrow(inst_df) == 0) { 
+        stop("None of the input species IDs match PLAZA species IDs.") 
+    }
     inst_df <- inst_df[match(species, inst_df$PLAZA_ID), ]
     
     urls <- vapply(inst_df$instance, instance2url, character(1))
@@ -65,3 +68,21 @@ get_delim <- function(species) {
     
     return(delims)
 }
+
+#' Helper function to validate input to function parameters
+#'
+#' @param parameter Character indicating the parameter's name.
+#' @param valid_options Character indicating allowed input options to
+#' parameter specified in \strong{parameter}
+#' 
+#' @noRd
+validate_input <- function(parameter, valid_options) {
+    
+    if(!parameter %in% valid_options) {
+        stop(paste0("Invalid input to parameter '", parameter, "'."))
+    }
+    
+    return(TRUE)
+}
+
+

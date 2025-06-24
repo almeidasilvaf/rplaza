@@ -29,5 +29,8 @@ test_that("get_sequences() reads sequences for particular loci", {
     expect_true(is(seq1, "DNAStringSet"))
     expect_true(is(seq2, "list"))
     expect_true(is(seq2[[1]], "AAStringSet"))
+    
+    expect_error(get_sequences("ath", type = "error"))
+    expect_error(get_sequences("ath", transcripts = "error"))
 })
 

@@ -75,6 +75,9 @@ get_family_assignments <- function(
         type = c("homo", "ortho")
 ) {
     
+    vi <- validate_input(instance, c("Dicots", "Monocots", "Diatoms", "Pico"))
+    vt <- validate_input(type, c("homo", "ortho"))
+
     # Construct URL
     burl <- instance2url(instance)
     type_id <- ifelse(type == "homo", ".HOMFAM", ".ORTHOFAM")
@@ -123,9 +126,8 @@ get_family_functions <- function(
         type = c("homo", "ortho")
 ) {
     
-    if(!instance %in% c("Dicots", "Monocots")) {
-        stop("Instance must be one of 'Dicots' or 'Monocots'")
-    }
+    vi <- validate_input(instance, c("Dicots", "Monocots"))
+    vt <- validate_input(type, c("homo", "ortho"))
     
     # Construct URL
     burl <- instance2url(instance)

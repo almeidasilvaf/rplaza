@@ -8,4 +8,6 @@ test_that("get_annotation() loads ranges as GRanges/GRangesList", {
     
     expect_true(is(ranges1, "GRangesList"))
     expect_true(is(ranges2, "GRanges"))
+    expect_error(get_annotation("ath", transcripts = "all", features = "error"))
+    expect_error(get_annotation("ath", transcripts = "error", features = "all"))
 })

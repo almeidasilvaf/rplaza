@@ -9,6 +9,7 @@ test_that("get_tx2gene() returns a data frame of 2 columns", {
     expect_equal(names(df1), c("transcript_id", "gene_id"))
     expect_equal(class(df1), "data.frame")
     expect_equal(class(df2), "list")
+    expect_error(get_tx2gene("ath", transcripts = "error"))
 })
 
 

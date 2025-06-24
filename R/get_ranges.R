@@ -30,6 +30,9 @@ get_annotation <- function(
         features = c("all", "exons")
 ) {
     
+    vt <- validate_input(transcripts, c("all", "longest"))
+    vf <- validate_input(features, c("all", "exons"))
+    
     # Construct URL
     burl <- base_url(species)
     tx <- ifelse(transcripts == "all", ".all_transcripts", ".selected_transcript")
@@ -42,11 +45,7 @@ get_annotation <- function(
     
     # Retrieve data
     ranges <- lapply(furl, function(x) {
-        return(
-            rtracklayer::import(
-                bfcrpath(BiocFileCache(), x)
-            )
-        )
+        return(rtracklayer::import(bfcrpath(BiocFileCache(), x)))
     })
     names(ranges) <- species
     ranges <- GenomicRanges::GRangesList(ranges)

@@ -16,6 +16,9 @@ test_that("get_family_assignments() returns a (list of) data frame(s)", {
     
     expect_error(get_family_assignments("DICOTS"))
     expect_equal(class(fams), "data.frame")
+    
+    expect_error(get_family_assignments(instance = "error"))
+    expect_error(get_family_assignments(instance = "Dicots", type = "error"))
 })
 
 
@@ -25,5 +28,7 @@ test_that("get_family_functions() returns a (list of) data frames", {
     
     expect_equal(class(fam_func), "data.frame")
     expect_error(get_family_functions(instance = "Diatoms"))
+    expect_error(get_family_functions(instance = "Diatoms", type = "error"))
     
+    expect_error(instance2url("error"))
 })
