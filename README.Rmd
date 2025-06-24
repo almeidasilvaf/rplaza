@@ -21,7 +21,8 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/almeidasilvaf/rplaza/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/rplaza?branch=devel)
 <!-- badges: end -->
 
-The goal of __rplaza__ is to provide users with an R interface to the PLAZA
+The goal of __rplaza__ is to provide users with an R interface to 
+the [PLAZA](https://bioinformatics.psb.ugent.be/plaza.dev/)
 database of plant comparative genomics. __rplaza__ can be used to retrieve PLAZA 
 data (e.g., genome and locus sequences, genome annotation, functional 
 annotation, homology, etc) directly from an R session using 

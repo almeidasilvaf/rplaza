@@ -13,10 +13,11 @@ coverage](https://codecov.io/gh/almeidasilvaf/rplaza/branch/devel/graph/badge.sv
 <!-- badges: end -->
 
 The goal of **rplaza** is to provide users with an R interface to the
-PLAZA database of plant comparative genomics. **rplaza** can be used to
-retrieve PLAZA data (e.g., genome and locus sequences, genome
-annotation, functional annotation, homology, etc) directly from an R
-session using standard R/Bioconductor data classes.
+[PLAZA](https://bioinformatics.psb.ugent.be/plaza.dev/) database of
+plant comparative genomics. **rplaza** can be used to retrieve PLAZA
+data (e.g., genome and locus sequences, genome annotation, functional
+annotation, homology, etc) directly from an R session using standard
+R/Bioconductor data classes.
 
 ## Overview
 
