@@ -59,8 +59,9 @@ knitr::kable(summary_df, col.names = c("Data", "File format", "R class"))
 with the following code:
 
 ```{r installation, eval=FALSE}
-if(!requireNamespace('BiocManager', quietly = TRUE))
-  install.packages('BiocManager')
+if(!requireNamespace('BiocManager', quietly = TRUE)) {
+    install.packages('BiocManager')
+}
 
 BiocManager::install("rplaza")
 ```
@@ -88,7 +89,7 @@ you can inspect the object `plaza_metadata`, which comes
 with `r BiocStyle::Githubpkg("rplaza")`.
 This object is a list of data frames, one for each PLAZA instance.
 
-```{r}
+```{r load_metadata}
 # Load PLAZA metadata
 data("plaza_metadata")
 
@@ -99,7 +100,7 @@ As you can see, the list has four data frames.
 If you want to have a look at the species in PLAZA Dicots, for instance, you
 need to extract the corresponding data frame from the list.
 
-```{r}
+```{r inspect_metadata}
 # Look at metadata for 
 head(plaza_metadata$Dicots)
 ```
@@ -114,7 +115,7 @@ PLAZA instances (e.g., *Arabidopsis thaliana*), so if you're combining these
 data frames in a single data frame, you need to remove duplicate rows. 
 For example:
 
-```{r}
+```{r combine_metadata}
 # Combine all data frames together and remove redundancy
 plaza_all <- dplyr::bind_rows(plaza_metadata, .id = "instance") |>
     dplyr::distinct(PLAZA_ID, .keep_all = TRUE)
@@ -158,7 +159,7 @@ the function `get_genome()`. For a single species, `get_genome()` takes a
 species ID and returns a `DNAStringSet` object.
 To demonstrate it, let's obtain the whole genome of *Arabidopsis thaliana*.
 
-```{r}
+```{r get_genome_one}
 # Retrieve genome of Arabidopsis thaliana
 ath_genome <- get_genome("ath")
 
@@ -168,7 +169,7 @@ ath_genome
 For multiple species, `get_genome()` takes a vector of species IDs 
 and returns a list of `DNAStringSet` objects.
 
-```{r}
+```{r get_genome_multiple}
 # Retrieve genome of A. thaliana and A. lyrata
 arabidopsis_genomes <- get_genome(c("ath", "aly"))
 
@@ -193,7 +194,7 @@ compare genomes. These are usually called 'proteomes' by software tools such as
 OrthoFinder [@emms2019orthofinder] and syntenet [@almeida2023syntenet]. 
 To do that, you'd run:
 
-```{r}
+```{r get_proteome}
 # Retrieve protein sequences of the longest transcripts (one per gene)
 proteome <- get_sequences("ath", type = "protein", transcripts = "longest")
 
@@ -206,7 +207,7 @@ transcriptome', and it is required by software tools that quantify
 transcript abundances, such as salmon [@patro2017salmon]. 
 To do that, you would run:
 
-```{r}
+```{r get_tx}
 # Obtain all transcripts produced by a genome (aka 'reference transcriptome')
 ref_tx <- get_sequences("ath", type = "transcript", transcripts = "all")
 
@@ -236,7 +237,7 @@ UTRs, etc. - or 'exons').
 For example, if you want to extract ranges for the complete genome annotation
 (i.e., all transcripts, all features), you'd run:
 
-```{r}
+```{r get_ranges}
 # Extract ranges for all features (exons, CDS, UTRs, etc) of all transcripts
 annotation_all <- get_annotation("ath", transcripts = "all", features = "all")
 
@@ -262,7 +263,7 @@ with each gene.
 For example, to obtain InterPro domains annotated to each gene 
 of *Arabidopsis thaliana*, you'd use:
 
-```{r}
+```{r get_interpro}
 # Get InterPro domains
 ath_interpro <- get_functional_annotation("ath", ontology = "InterPro")
 
@@ -272,7 +273,7 @@ head(ath_interpro)
 As another example, to obtain GO annotations for the Chlorophyta algae 
 *Chlamydomonas reinhardtii* and *Micromonas commoda*, you'd use:
 
-```{r}
+```{r get_go}
 # Obtain functional annotation for Chlorophyta algae
 algae_go <- get_functional_annotation(c("cre", "mco"), ontology = "GO")
 
@@ -282,7 +283,7 @@ head(algae_go$cre)
 
 Lastly, to obtain MapMan annotations for all *A. thaliana* genes, you'd use:
 
-```{r}
+```{r get_mapman}
 # Retrieve MapMan annotations for all *A. thaliana* genes
 ath_mapman <- get_functional_annotation("ath", ontology = "MapMan")
 
@@ -301,7 +302,7 @@ or 'longest').
 For example, to obtain transcript-to-gene ID mappings 
 for *Arabidopsis thaliana*, you'd run:
 
-```{r}
+```{r get_tx2gene}
 # Get tx2gene mappings for *A. thaliana*
 ath_tx2gene <- get_tx2gene("ath", transcripts = "all")
 
@@ -313,7 +314,7 @@ A similar problem occurs when researchers have gene symbols (e.g., *FLC* and
 case, PLAZA offers ID conversion tables, which can be accessed with the
 function `get_id_conversions()`, as demonstrated below:
 
-```{r}
+```{r get_id_conversion}
 # Get ID conversion table for *A. thaliana*
 ath_ids <- get_id_conversions("ath")
 
@@ -328,7 +329,7 @@ takes one or multiple PLAZA species IDs as input.
 For example, to obtain gene descriptions for all *A. thaliana* genes, you'd
 run:
 
-```{r}
+```{r get_descriptions}
 # Get gene descriptions for *A. thaliana*
 ath_descriptions <- get_descriptions("ath")
 
@@ -350,7 +351,7 @@ orthologous).
 For example, to retrieve all genes and their homologous family assignments
 in PLAZA Dicots, you'd run:
 
-```{r}
+```{r get_family_assignments}
 # Get family assignments from PLAZA Dicots
 dicots_fams <- get_family_assignments(instance = "Dicots", type = "homo")
 
@@ -367,7 +368,7 @@ they are only available for PLAZA Dicots and PLAZA Monocots.
 For example, to retrieve overrepresented functions in all homologous 
 gene families in PLAZA Dicots, you'd run:
 
-```{r}
+```{r get_fam_functions}
 # Get overrepresented functions in PLAZA Dicots families
 dicots_fams_func <- get_family_functions(instance = "Dicots", type = "homo")
 
@@ -382,7 +383,7 @@ species IDs as input.
 
 For example, to retrieve all *A. thaliana* block duplicates, you'd run:
 
-```{r}
+```{r get_block}
 # Get block duplicates for *A. thaliana*
 ath_blocks <- get_block_duplicates("ath")
 
@@ -396,7 +397,7 @@ Note that the `Ks` column is empty, meaning that synonymous substitution rates
 
 This document was created under the following conditions:
 
-```{r, echo = FALSE}
+```{r session_info, echo = FALSE}
 sessioninfo::session_info()
 ```
 
