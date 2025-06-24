@@ -82,9 +82,10 @@ different clades:
 3. **pico-PLAZA:** focus on eukaryotic micro-organisms (*N* = 39 species);
 4. **PLAZA Diatoms:** focus on diatoms (*N* = 26 species).
 
-To access data on which species can be found in species, as well as associated
-metadata (taxonomic information, data sources, etc), you can inspect the 
-object `plaza_metadata`, which comes with `r BiocStyle::Githubpkg("rplaza")`.
+To access data on what species can be found in which instance, 
+as well as associated metadata (taxonomic information, data sources, etc), 
+you can inspect the object `plaza_metadata`, which comes 
+with `r BiocStyle::Githubpkg("rplaza")`.
 This object is a list of data frames, one for each PLAZA instance.
 
 ```{r}
@@ -136,7 +137,7 @@ in two common scenarios:
 1. You downloaded data for species A and B, but later decide to include species
 C and D as well. If you re-run the code to obtain data for species A, B, C, 
 and D, you will only download data for species C and D, as data for species A
-and B are stored in a local cache.
+and B are already stored in a local cache.
 
 2. You tried to download data for several species, but after some time your
 download failed for some reason (internet issues, timeout, etc). If you re-run
@@ -187,8 +188,8 @@ or multiple species IDs, `get_sequences()` also requires the locus `type`
 (one of 'all' or 'longest'). 
 
 For example, researchers in evolutionary genomics often want to obtain 
-protein sequences of the longest transcripts of each gene, so that they compare
-genomes. These are usually called 'proteomes' by software tools such as
+protein sequences of the longest transcripts of each gene, so that they can 
+compare genomes. These are usually called 'proteomes' by software tools such as
 OrthoFinder [@emms2019orthofinder] and syntenet [@almeida2023syntenet]. 
 To do that, you'd run:
 
@@ -212,7 +213,7 @@ ref_tx <- get_sequences("ath", type = "transcript", transcripts = "all")
 ref_tx
 ```
 
-Note that the number of sequences in `ref_tx` in much larger than the number
+Note that the number of sequences in `ref_tx` is much larger than the number
 of sequences in `proteome`, since the former contains sequences for all
 transcripts (including multiple isoforms per gene).
 
@@ -258,7 +259,7 @@ to use (one of 'GO', 'MapMan', or 'InterPro'), and it returns a data frame
 (or list of data frames, in case of multiple species) with terms associated
 with each gene.
 
-For example, to obtain InterPro annotated to each gene 
+For example, to obtain InterPro domains annotated to each gene 
 of *Arabidopsis thaliana*, you'd use:
 
 ```{r}
@@ -268,7 +269,7 @@ ath_interpro <- get_functional_annotation("ath", ontology = "InterPro")
 head(ath_interpro)
 ```
 
-As another example, to obtain GO annotation for the Chlorophyta algae 
+As another example, to obtain GO annotations for the Chlorophyta algae 
 *Chlamydomonas reinhardtii* and *Micromonas commoda*, you'd use:
 
 ```{r}
@@ -293,7 +294,7 @@ head(ath_mapman)
 Researchers often have transcript IDs for a particular genome and want
 to obtain their corresponding gene IDs. PLAZA provides correspondence tables of
 transcript-to-gene ID mappings for all species, which can be very helpful
-in this context. These can be retrieve with `get_tx2gene`, which takes
+in this context. These can be retrieved with `get_tx2gene`, which takes
 as input PLAZA species IDs and what `transcripts` to retrieve (one of 'all'
 or 'longest').
 
@@ -357,14 +358,14 @@ head(dicots_fams)
 ```
 
 Once you have some homologous or orthologous gene families of 
-interest (e.g., because they expanded in a particular clade), you would
+interest (e.g., families that expanded in a particular clade), you would
 probably want to know the functions of the genes in these families.
 Luckily for you, PLAZA stores data on overrepresented functions in its gene
 families. These can be accessed with the function `get_family_functions()`, but
 they are only available for PLAZA Dicots and PLAZA Monocots.
 
-To retrieve overrepresented functions in all homologous gene families in PLAZA
-Dicots, you'd run:
+For example, to retrieve overrepresented functions in all homologous 
+gene families in PLAZA Dicots, you'd run:
 
 ```{r}
 # Get overrepresented functions in PLAZA Dicots families
