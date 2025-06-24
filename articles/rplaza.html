@@ -150,10 +150,11 @@ in different clades:</p>
 <strong>PLAZA Diatoms:</strong> focus on diatoms (<em>N</em> = 26
 species).</li>
 </ol>
-<p>To access data on which species can be found in species, as well as
-associated metadata (taxonomic information, data sources, etc), you can
-inspect the object <code>plaza_metadata</code>, which comes with <em><a href="https://github.com/rplaza" class="external-link">rplaza</a></em>. This object is a list
-of data frames, one for each PLAZA instance.</p>
+<p>To access data on what species can be found in which instance, as
+well as associated metadata (taxonomic information, data sources, etc),
+you can inspect the object <code>plaza_metadata</code>, which comes with
+<em><a href="https://github.com/rplaza" class="external-link">rplaza</a></em>. This object is
+a list of data frames, one for each PLAZA instance.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load PLAZA metadata</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"plaza_metadata"</span><span class="op">)</span></span>
@@ -254,7 +255,8 @@ is especially important in two common scenarios:</p>
 <li><p>You downloaded data for species A and B, but later decide to
 include species C and D as well. If you re-run the code to obtain data
 for species A, B, C, and D, you will only download data for species C
-and D, as data for species A and B are stored in a local cache.</p></li>
+and D, as data for species A and B are already stored in a local
+cache.</p></li>
 <li><p>You tried to download data for several species, but after some
 time your download failed for some reason (internet issues, timeout,
 etc). If you re-run the code to download data, your download will start
@@ -338,7 +340,7 @@ IDs, <code><a href="../reference/get_sequences.html">get_sequences()</a></code> 
 <code>transcripts</code> to extract (one of ‘all’ or ‘longest’).</p>
 <p>For example, researchers in evolutionary genomics often want to
 obtain protein sequences of the longest transcripts of each gene, so
-that they compare genomes. These are usually called ‘proteomes’ by
+that they can compare genomes. These are usually called ‘proteomes’ by
 software tools such as OrthoFinder <span class="citation">(Emms and
 Kelly 2019)</span> and syntenet <span class="citation">(Almeida-Silva et
 al. 2023)</span>. To do that, you’d run:</p>
@@ -383,7 +385,7 @@ run:</p>
 <span><span class="co">#&gt; [91391]  2024 <span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">AAAAAAAAAA</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">AAAAAAAA</span>...<span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #FFAFAF;">AAA</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">GG</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #AFFFFF;">GG</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #AFFFAF;">CC</span><span style="color: #000000; background-color: #FFD7AF;">TT</span><span style="color: #000000; background-color: #FFAFAF;">AA</span> AT5G67540.3 | AT5...</span></span>
 <span><span class="co">#&gt; [91392]  1370 <span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">TT</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">TT</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">AA</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFAFAF;">AAAA</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">AA</span>...<span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">GG</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFD7AF;">TTT</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #FFAFAF;">AA</span> AT5G67580.2 | AT5...</span></span>
 <span><span class="co">#&gt; [91393]  1814 <span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">AAA</span><span style="color: #000000; background-color: #AFFFAF;">CCC</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFAFAF;">AA</span><span style="color: #000000; background-color: #AFFFFF;">GG</span><span style="color: #000000; background-color: #FFAFAF;">AA</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">AAA</span>...<span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">TTTT</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">GG</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">TT</span><span style="color: #000000; background-color: #FFAFAF;">AA</span><span style="color: #000000; background-color: #FFD7AF;">T</span> AT5G67610.2 | AT5...</span></span></code></pre></div>
-<p>Note that the number of sequences in <code>ref_tx</code> in much
+<p>Note that the number of sequences in <code>ref_tx</code> is much
 larger than the number of sequences in <code>proteome</code>, since the
 former contains sequences for all transcripts (including multiple
 isoforms per gene).</p>
@@ -483,7 +485,7 @@ this function takes one or multiple PLAZA species IDS and the
 <code>ontology</code> to use (one of ‘GO’, ‘MapMan’, or ‘InterPro’), and
 it returns a data frame (or list of data frames, in case of multiple
 species) with terms associated with each gene.</p>
-<p>For example, to obtain InterPro annotated to each gene of
+<p>For example, to obtain InterPro domains annotated to each gene of
 <em>Arabidopsis thaliana</em>, you’d use:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get InterPro domains</span></span>
@@ -504,9 +506,9 @@ species) with terms associated with each gene.</p>
 <span><span class="co">#&gt; 4     source=PANTHER,domainId=PTHR14467</span></span>
 <span><span class="co">#&gt; 5         source=SMART,domainId=SM01019</span></span>
 <span><span class="co">#&gt; 6           source=CDD,domainId=cd10017</span></span></code></pre></div>
-<p>As another example, to obtain GO annotation for the Chlorophyta algae
-<em>Chlamydomonas reinhardtii</em> and <em>Micromonas commoda</em>,
-you’d use:</p>
+<p>As another example, to obtain GO annotations for the Chlorophyta
+algae <em>Chlamydomonas reinhardtii</em> and <em>Micromonas
+commoda</em>, you’d use:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Obtain functional annotation for Chlorophyta algae</span></span>
 <span><span class="va">algae_go</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_functional_annotation.html">get_functional_annotation</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cre"</span>, <span class="st">"mco"</span><span class="op">)</span>, ontology <span class="op">=</span> <span class="st">"GO"</span><span class="op">)</span></span>
@@ -563,7 +565,7 @@ genes, you’d use:</p>
 <p>Researchers often have transcript IDs for a particular genome and
 want to obtain their corresponding gene IDs. PLAZA provides
 correspondence tables of transcript-to-gene ID mappings for all species,
-which can be very helpful in this context. These can be retrieve with
+which can be very helpful in this context. These can be retrieved with
 <code>get_tx2gene</code>, which takes as input PLAZA species IDs and
 what <code>transcripts</code> to retrieve (one of ‘all’ or
 ‘longest’).</p>
@@ -646,14 +648,14 @@ assignments in PLAZA Dicots, you’d run:</p>
 <span><span class="co">#&gt; 5 HOM05D000001     aag       AagrBONN_evm.TU.Sc2ySwM_344.5587</span></span>
 <span><span class="co">#&gt; 6 HOM05D000001     aag       AagrBONN_evm.TU.Sc2ySwM_344.5588</span></span></code></pre></div>
 <p>Once you have some homologous or orthologous gene families of
-interest (e.g., because they expanded in a particular clade), you would
+interest (e.g., families that expanded in a particular clade), you would
 probably want to know the functions of the genes in these families.
 Luckily for you, PLAZA stores data on overrepresented functions in its
 gene families. These can be accessed with the function
 <code><a href="../reference/get_family_functions.html">get_family_functions()</a></code>, but they are only available for
 PLAZA Dicots and PLAZA Monocots.</p>
-<p>To retrieve overrepresented functions in all homologous gene families
-in PLAZA Dicots, you’d run:</p>
+<p>For example, to retrieve overrepresented functions in all homologous
+gene families in PLAZA Dicots, you’d run:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get overrepresented functions in PLAZA Dicots families</span></span>
 <span><span class="va">dicots_fams_func</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_family_functions.html">get_family_functions</a></span><span class="op">(</span>instance <span class="op">=</span> <span class="st">"Dicots"</span>, type <span class="op">=</span> <span class="st">"homo"</span><span class="op">)</span></span>
@@ -711,7 +713,7 @@ were not calculated for this genome.</p>
 <span><span class="co">#&gt;  collate  en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  ctype    en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  tz       UTC</span></span>
-<span><span class="co">#&gt;  date     2025-06-23</span></span>
+<span><span class="co">#&gt;  date     2025-06-24</span></span>
 <span><span class="co">#&gt;  pandoc   3.7.0.2 @ /usr/bin/ (via rmarkdown)</span></span>
 <span><span class="co">#&gt;  quarto   1.6.42 @ /usr/local/bin/quarto</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -778,7 +780,7 @@ were not calculated for this genome.</p>
 <span><span class="co">#&gt;  rjson                  0.2.23    <span style="color: #555555;">2024-09-16</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  rlang                  1.1.6     <span style="color: #555555;">2025-04-11</span> <span style="color: #555555;">[2]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  rmarkdown              2.29      <span style="color: #555555;">2024-11-04</span> <span style="color: #555555;">[2]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  rplaza               * 0.99.0    <span style="color: #555555;">2025-06-23</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
+<span><span class="co">#&gt;  rplaza               * 0.99.0    <span style="color: #555555;">2025-06-24</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
 <span><span class="co">#&gt;  Rsamtools              2.25.1    <span style="color: #555555;">2025-06-22</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.22 (R 4.5.1)</span></span></span>
 <span><span class="co">#&gt;  RSQLite                2.4.1     <span style="color: #555555;">2025-06-08</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  rtracklayer            1.69.1    <span style="color: #555555;">2025-06-22</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.22 (R 4.5.1)</span></span></span>
