@@ -3,7 +3,6 @@
 \docType{data}
 \name{plaza_tree}
 \alias{plaza_tree}
-\alias{plaza_metadata}
 \title{Phylogenetic tree with relationships between species in all PLAZA instances}
 \format{
 A \code{phylo} object with tip labels corresponding to PLAZA species IDs.

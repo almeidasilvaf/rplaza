@@ -39,4 +39,4 @@
 #' @examples 
 #' data(plaza_tree)
 #' @usage data(plaza_tree)
-"plaza_metadata"
+"plaza_tree"
