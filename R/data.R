@@ -26,3 +26,17 @@
 #' @usage data(plaza_metadata)
 "plaza_metadata"
 
+
+#' Phylogenetic tree with relationships between species in all PLAZA instances
+#'
+#' Trees were obtained from the home page of each PLAZA instance and combined
+#' to include all (non-redundant) species.
+#' 
+#' @name plaza_tree
+#' @format A `phylo` object with tip labels corresponding to PLAZA species IDs.
+#' Lengths of all branches are 0.05 and do not represent any meaningful
+#' measure of time (neither absolute not accumulated substitutions).
+#' @examples 
+#' data(plaza_tree)
+#' @usage data(plaza_tree)
+"plaza_metadata"

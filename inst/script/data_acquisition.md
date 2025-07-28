@@ -4,6 +4,10 @@ Data acquisition
 ``` r
 library(tidyverse)
 library(taxize)
+library(rvest)
+library(httr)
+library(ggtree)
+library(ape)
 
 set.seed(123)
 ```
@@ -117,6 +121,137 @@ plaza_metadata <- lapply(plaza_metadata, function(x) {
 
 # Save object
 usethis::use_data(plaza_metadata, compress = "xz")
+```
+
+## *plaza_tree*
+
+This object contains a `phylo` object with a phylogenetic tree for all
+unique species in all PLAZA instances (Dicots, Monocots, Diatoms,
+Pico-PLAZA). To create it, we first defined the following helper
+functions:
+
+``` r
+# Helper functions
+
+#' Extract tree from PLAZA as a `phylo` object
+extract_plaza_tree <- function(page_url) {
+    
+    plaza_tree <- GET(page_url) |>
+        content(as = "text") |>
+        read_html() |>
+        html_elements("script") |>
+        html_text() |>
+        (\(scripts) scripts[str_detect(scripts, "var tt")])() |>
+        (\(script) str_match(script, "var tt\\s*=\\s*\"((?:.|\n)*?)\";")[,2])() |>
+        (\(nwk) ape::read.tree(text = nwk))()
+    
+    return(plaza_tree)
+}
+
+#' Get node labels and their corresponding IDs
+#' 
+node_id_table <- function(tree) {
+    
+    df <- data.frame(
+        id = 1:(length(tree$tip.label) + tree$Nnode),
+        label = c(tree$tip.label, tree$node.label)
+    )
+    
+    return(df)
+}
+
+#' Combine trees based on some nodes
+#' 
+#' Replace node X of tree X with subtree from node Y of tree Y
+combine_trees <- function(tree_x, node_x, tree_y, node_y) {
+    
+    # Get subtree to add
+    subtree_add <- extract.clade(tree_y, node = node_y)
+    
+    # Tag tips that should be removed after merging
+    toremove <- extract.clade(tree_x, node = node_x)$tip.label
+    toremove_labels <- paste0(toremove, "XX")
+    tree_x$tip.label <- ifelse(
+        tree_x$tip.label %in% toremove, 
+        paste0(tree_x$tip.label, "XX"), 
+        tree_x$tip.label
+    )
+    
+    # Combine trees and remove old node
+    new_tree <- bind.tree(tree_x, subtree_add, where = node_x)
+    new_tree <- drop.tip(new_tree, toremove_labels)
+    
+    return(new_tree)
+}
+```
+
+Then, we extracted trees with the following code.
+
+``` r
+# Get trees from HTML pages
+tree_dicots <- extract_plaza_tree(
+    "https://bioinformatics.psb.ugent.be/plaza.dev/instances/dicots_05/configuration/draw_species_tree"
+)
+
+tree_monocots <- extract_plaza_tree(
+    "https://bioinformatics.psb.ugent.be/plaza.dev/instances/monocots_05/configuration/draw_species_tree"
+)
+
+tree_diatoms <- extract_plaza_tree(
+    "https://bioinformatics.psb.ugent.be/plaza/versions/plaza_diatoms_01/"
+)
+
+tree_pico <- extract_plaza_tree(
+    "https://bioinformatics.psb.ugent.be/plaza/versions/plaza_pico_03/"
+)
+```
+
+Finally, we combined trees with the following code.
+
+``` r
+# Combine trees together ---
+
+#' Helper to find node numbers
+#' 
+#' p <- ggtree(tree_monocots,  branch.length = "none") +
+#'     geom_text(aes(label = ifelse(!isTip, node, ""))) +
+#'     geom_tiplab()
+#' 
+
+# In Dicots, replace 'Liliopsida' with Monocots version (expanded) ----
+lilio <- bind_rows(
+    node_id_table(tree_dicots), node_id_table(tree_monocots)
+) |>
+    filter(label == "Liliopsida") |> 
+    pull(id)
+    
+ctree1 <- combine_trees(tree_dicots, lilio[1], tree_monocots, lilio[2])
+
+# In Pico, replace 'Embryophyta' with 'Streptophytina' from `ctree1` ----
+strepto <- bind_rows(
+    node_id_table(tree_pico) |> filter(label == "Embryophyta"),
+    node_id_table(ctree1) |> filter(label == "Streptophytina"),
+) |>
+    pull(id)
+
+ctree2 <- combine_trees(tree_pico, strepto[1], ctree1, strepto[2])
+
+
+# In `ctree2`, replace 'Diatoms' with Diatoms version (expanded) ----
+diatoms <- bind_rows(
+    node_id_table(ctree2), node_id_table(tree_diatoms)
+) |>
+    filter(label == "Diatoms") |> 
+    pull(id)
+
+ctree3 <- combine_trees(ctree2, diatoms[1], tree_diatoms, diatoms[2])
+
+# Add 'Prasinoderma coloniale' (pco) to node that splits Cbrauni from Chlorophyta
+plaza_tree <- phytools::bind.tip(
+    ctree3, "pco", 0.05, where = 186
+)
+
+usethis::use_data(plaza_tree, compress = "xz")
 ```
 
 # Internal data
